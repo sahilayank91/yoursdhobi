@@ -16,7 +16,7 @@ var UserSchema = new mongoose.Schema({
 	dob:{type:Date},
     role:{
         type:String,
-        enum:[ROLES.CUSTOMER,ROLES.WASHER],
+        enum:[ROLES.CUSTOMER,ROLES.WASHER,ROLES.AGENT],
     },
     password: {type: String, required: false},
 	gender: {
@@ -26,14 +26,12 @@ var UserSchema = new mongoose.Schema({
 	},
     address:{type:String},
     profilePic: {type:String},
-
     activated: {type: Boolean, default: false},
     created_at: {type: Date, default: new Date()},
     created_by: {type: String, ref: 'User'},
-
     occupation:{type:String},
-    address: String,
-
+    latitude:{type:Number},
+    longitude:{type:Number},
     about: String,
     }, {
     minimize: false

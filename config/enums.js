@@ -4,8 +4,15 @@ var titles = ['Mr.', 'Mrs.', 'Ms.', 'Dr.'];
 module.exports = {
 
     roles: {
-        CUSTOMER:'Customer',
-        WASHER:'Washer'
+        CUSTOMER: 'Customer',
+        WASHER: 'Washer',
+        AGENT: 'Agent'
+    },
+    status:{
+      RECIEVED:'Recieved',
+      COMPLETED:'Completed',
+      DELIVERED:'Delivered',
+      CANCELLED:'Cancelled'
     },
     gender:{
         MALE:'Male',
