@@ -50,7 +50,7 @@ mongoose.connect(
             )
         }
     }
-)
+);
 
 mongoose.set("debug", true);
 
@@ -61,6 +61,7 @@ mongoose.set("debug", true);
 const UI_INDEX = require(__BASE__ + "routes/index");
 const SERVICE_authenticate = require(__BASE__ + "routes/service/authenticate");
 const SERVICE_order = require(__BASE__ + "routes/service/order");
+
 // const SERVICE_registration = require(__BASE__ + "routes/service/registration");
 
 
@@ -70,12 +71,9 @@ const SERVICE_order = require(__BASE__ + "routes/service/order");
 /****************************************************/
 app.use('/', UI_INDEX);
 app.use('/service/authenticate', SERVICE_authenticate);
-// app.use('/service/registration',SERVICE_registration);
-app.use('/service/order',SERVICE_order);
+app.use('/service/order', SERVICE_order);
 
-
-
-
+// app.use('/service/order', SERVICE_order);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

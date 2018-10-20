@@ -56,9 +56,24 @@ let getOrderById = function(parameters){
             console.log("Error in createUser",error);
         })
 };
+let getOrderByUserId = function(parameters){
+    console.log(parameters);
+    return orderOperations.getOrderByUserId(parameters)
+        .then(function(data){
+            if(data){
+                return data;
+            }else{
+                throw new Error('Cant create user with the given credentials');
+            }
+        }).catch(function(error){
+            console.log("Error in createUser",error);
+        })
+};
 module.exports = {
    newOrder:newOrder,
     getOrder:getOrder,
     updateOrder:updateOrder,
-    getOrderById:getOrderById
+    getOrderById:getOrderById,
+    getOrderByUserId:getOrderByUserId
+
 };

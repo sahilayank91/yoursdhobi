@@ -18,7 +18,7 @@ var OrderSchema = new mongoose.Schema({
     blanket_double: {type: String},
     bedsheet_single: {type: String},
     bedsheet_double: {type: String},
-    pickupdate: {type: Date, required: true},
+    pickup_date: {type: String},
     address: {type: String},
     created_at: {type: Date, default: new Date()},
     userid: {type: String, ref: 'User'},
@@ -32,4 +32,4 @@ var OrderSchema = new mongoose.Schema({
 OrderSchema.index({_id: 1, created_at: -1});
 
 
-module.exports = mongoose.model('User', OrderSchema);
+module.exports = mongoose.model('Order', OrderSchema);

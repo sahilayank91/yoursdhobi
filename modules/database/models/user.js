@@ -12,7 +12,8 @@ var UserSchema = new mongoose.Schema({
 	lastname: {type: String}, //change the keys whenever lastname changes
 	name:{type:String},
 	phone: String,
-	email: {type:String,unique:true},
+	secondary_phoneno:{type:String},
+    email: {type:String,unique:true},
 	dob:{type:Date},
     role:{
         type:String,
@@ -25,13 +26,16 @@ var UserSchema = new mongoose.Schema({
 		enum:[GENDER.MALE,GENDER.FEMALE,GENDER.OTHER]
 	},
     address:{type:String},
+    city:{type:String},
+    pincode:{type:String},
     profilePic: {type:String},
     activated: {type: Boolean, default: false},
     created_at: {type: Date, default: new Date()},
     created_by: {type: String, ref: 'User'},
     occupation:{type:String},
-    latitude:{type:Number},
-    longitude:{type:Number},
+    latitude:{type:String},
+    longitude:{type:String},
+
     about: String,
     }, {
     minimize: false

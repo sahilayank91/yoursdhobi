@@ -60,9 +60,25 @@ router.post('/register',function(req,res) {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         address:req.body.address,
-        phone:req.body.phone
+        phone:req.body.phone,
+        role:req.body.role
     };
+    if(req.body.secondary_phoneno){
+        parameters.secondary_phoneno = req.body.secondary_phoneno;
+    }
+    if(req.body.latitude){
+        parameters.latitude = req.body.latitude;
+    }
+    if(req.body.longitude){
+        parameters.longitude = req.body.longitude;
+    }
 
+    if(req.body.city){
+        parameters.city = req.body.city;
+    }
+    if(req.body.pincode){
+        parameters.pincode = req.body.pincode;
+    }
     UserController.registerUser(parameters)
         .then(function (data) {
             if (data) {

@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 var userOperations = require(__BASE__+"modules/database/accessors/user_operations");
@@ -27,9 +26,11 @@ router.post('/newOrder',function(req,res) {
         blanket_double:req.body.blanket_double,
         bedsheet_single:req.body.bedsheet_single,
         bedsheet_double:req.body.bedsheet_double,
-        pickupdate:req.body.pickupdate,
+        pickup_date:req.body.pickupdate,
         latitude:req.body.latitude,
-        longitude:req.body.longitude
+        longitude:req.body.longitude,
+        status:req.body.status,
+        address:req.body.address
     };
 
     OrderController.newOrder(parameters)
@@ -66,11 +67,30 @@ router.post('/getOrder',function(req,res) {
 
         });
 });
+
+router.post('/getOrderByUserId',function(req,res) {
+    var parameters = {
+        userid:req.body.userid,
+    };
+    OrderController.getOrderByUserId(parameters)
+        .then(function (data) {
+            if (data) {
+                RESPONSE.sendOkay(res, {success: true,data:data});
+                // RESPONSE.sendOkay(res, parameters);
+                return true;
+            } else {
+                console.log("Some error occured while getting order from the database");
+                return false;
+            }
+
+
+        });
+});
+
 router.post('/updateOrder',function(req,res) {
     var parameters = {
         _id:req.body._id,
     };
-
 
     OrderController.updateOrder(parameters)
         .then(function (data) {
@@ -86,3 +106,4 @@ router.post('/updateOrder',function(req,res) {
 
         });
 });
+module.exports = router;

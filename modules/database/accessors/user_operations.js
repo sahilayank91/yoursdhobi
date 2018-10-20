@@ -36,6 +36,12 @@ let getCreateTemplate = function (parameters) {
 					case 'local_address':
                     case 'expertise':
                     case 'occupation':
+                    case 'latitude':
+                    case 'longitude':
+                    case 'city':
+                    case 'pincode':
+                    case 'address':
+                    case 'role':
                 template[key] = parameters[key];
                 break;
         }

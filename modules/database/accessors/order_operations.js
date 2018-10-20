@@ -6,9 +6,9 @@ let Counter = require(__BASE__ + 'modules/database/models/counter');
 
 //A template to input the data required at the registration of the user
 let getCreateTemplate = function (parameters) {
-    if ((!parameters.email && !parameters.phone)) {
-        return {};
-    }
+    // if ((!parameters.email && !parameters.phone)) {
+    //     return {};
+    // }
     let template = {}
     for (let key in parameters) {
         switch (key) {
@@ -23,7 +23,9 @@ let getCreateTemplate = function (parameters) {
             case 'bedsheet_single':
             case 'bedsheet_double':
             case 'permanent_address':
-            case 'pickupdate':
+            case 'status':
+            case 'address':
+            case 'pickup_date':
             case 'local_address':
             case 'expertise':
                 template[key] = parameters[key];
@@ -51,6 +53,7 @@ let createOrder = function (parameters) {
     return new Promise(function(resolve, reject) {
         let template = getCreateTemplate(parameters);
         /*Store the user using the template*/
+        console.log("flsdjfa",template);
         let order = new Order(template);
         order.save(function(err, data) {
             if (!err) {
@@ -128,11 +131,22 @@ let getOrderById = function(rule,fields,options){
 
 
 
+let getOrderByUserId = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Order.find(rule,fields,options).exec(function(err,data){
+            if(!err){
+                resolve(data);
+            }else{
+                reject(new Error("Failed to get User"));
+            }
+        });
+    });
+};
 module.exports = {
     createOrder: createOrder,
     getOrder: getOrder,
     updateOrder:updateOrder,
     getOrderById:getOrderById,
     getOrderFullDetail:getOrderFullDetail,
-
+    getOrderByUserId:getOrderByUserId
 };
