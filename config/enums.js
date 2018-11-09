@@ -5,7 +5,7 @@ module.exports = {
 
     roles: {
         CUSTOMER: 'Customer',
-        WASHER: 'Washer',
+        WASHER: 'Washerman',
         AGENT: 'Agent'
     },
     status:{
@@ -24,9 +24,11 @@ module.exports = {
         IMAGE_HIGH: 'high'
     },
     service_type:{
-        WASH_AND_FOLD:'wash_and_fold',
-        WASH_AND_IRON:'wash_and_iron',
-        DRYCLEAN:'dryclean',
+        WASH_AND_FOLD:'Wash and Fold',
+        WASH_AND_IRON:'Wash and Iron',
+        DRYCLEAN:'Dry Clean',
+        PREMIUM_LAUNDRY:'Premium Laundry',
+        STEAM_IRON:'Steam Ironing'
     },
     post_type:{
         TECHNOLOGY:'Technology',

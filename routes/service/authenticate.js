@@ -61,7 +61,7 @@ router.post('/register',function(req,res) {
         lastname: req.body.lastname,
         address:req.body.address,
         phone:req.body.phone,
-        role:req.body.role
+        role:req.body.role,
     };
     if(req.body.secondary_phoneno){
         parameters.secondary_phoneno = req.body.secondary_phoneno;
@@ -189,7 +189,6 @@ router.post('/forgotPassword',function(req,res){
 
     let pass = customUUID.getRandomAplhaNumeric();
 
-    console.log("sdfasfas",pass);
     nodemailer.createTestAccount((err, account) => {
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
@@ -241,28 +240,18 @@ router.post('/forgotPassword',function(req,res){
 
 
 
-router.post('/changePassword',function(req,res){
+router.post('/changePasswordUsingPhone',function(req,res){
 
     let query = {
-        _id:req.body._id,
-        password: req.body.currentpass
+        $or: [ { phone: { $eq: req.body.phone } }, { phone: { $eq: '+91'+req.body.phone } } ]
     };
-
     let template = {
         password:req.body.newpass
     };
-
     console.log(query);
     UserController.changePassword(query, template)
         .then(function (data) {
             if (data) {
-
-                // /*Setting up session parameters*/
-                // req.session.key = TokenHandler.generateAuthToken(data[0]._id, data[0].role);
-                // req.session.email = data[0].email;
-                // req.session.role = data[0].role;
-
-
                 RESPONSE.sendOkay(res, {success: true, data: data});
             } else {
                 console.log("Some error occured while getting data from the database");

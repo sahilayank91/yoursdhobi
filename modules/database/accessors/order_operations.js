@@ -1,14 +1,11 @@
 let Order = require(__BASE__ + 'modules/database/models/order');
 let customUUID = require(__BASE__ + "modules/utils/CustomUUID");
 let Promise = require('bluebird');
-let Counter = require(__BASE__ + 'modules/database/models/counter');
-
+let moment = require('moment');
 
 //A template to input the data required at the registration of the user
 let getCreateTemplate = function (parameters) {
-    // if ((!parameters.email && !parameters.phone)) {
-    //     return {};
-    // }
+
     let template = {}
     for (let key in parameters) {
         switch (key) {
@@ -27,7 +24,12 @@ let getCreateTemplate = function (parameters) {
             case 'address':
             case 'pickup_date':
             case 'local_address':
-            case 'expertise':
+            case 'service':
+            case 'order':
+            case 'latitude':
+            case 'longitude':
+            case 'washerman_id':
+            case 'userid':
                 template[key] = parameters[key];
                 break;
         }
@@ -36,12 +38,12 @@ let getCreateTemplate = function (parameters) {
 
     template.created_at = new Date();
 
-    // if (parameters.password) {
-    //     template.password = cryptographer.hashIt(parameters.password);
-    // }
+    if(template.pickup_date){
+        template.pickup_date = new Date(Number(template.pickup_date));
+    }
 
     if (!template._id) {
-        template._id = customUUID.getRandomAplhaNumeric();
+        template._id = customUUID.getRandomString(6);
     }
 
     return template;
@@ -53,7 +55,6 @@ let createOrder = function (parameters) {
     return new Promise(function(resolve, reject) {
         let template = getCreateTemplate(parameters);
         /*Store the user using the template*/
-        console.log("flsdjfa",template);
         let order = new Order(template);
         order.save(function(err, data) {
             if (!err) {
@@ -142,11 +143,24 @@ let getOrderByUserId = function(rule,fields,options){
         });
     });
 };
+let cancelOrder = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Order.remove(rule,fields,options).exec(function(err,data){
+            if(!err){
+                resolve(data);
+            }else{
+                reject(new Error("Failed to cancel Order"));
+            }
+        });
+    });
+};
+
 module.exports = {
     createOrder: createOrder,
     getOrder: getOrder,
     updateOrder:updateOrder,
     getOrderById:getOrderById,
     getOrderFullDetail:getOrderFullDetail,
-    getOrderByUserId:getOrderByUserId
+    getOrderByUserId:getOrderByUserId,
+    cancelOrder:cancelOrder
 };

@@ -1,7 +1,6 @@
 let User = require(__BASE__ + 'modules/database/models/user');
 let customUUID = require(__BASE__ + "modules/utils/CustomUUID");
 let Promise = require('bluebird');
-let Counter = require(__BASE__ + 'modules/database/models/counter');
 
 
 //A template to input the data required at the registration of the user
@@ -42,6 +41,7 @@ let getCreateTemplate = function (parameters) {
                     case 'pincode':
                     case 'address':
                     case 'role':
+
                 template[key] = parameters[key];
                 break;
         }
@@ -194,7 +194,7 @@ let unfollowUser = function(rule,fields,options){
 
 let changePassword = function(rule,fields,options){
     return new Promise(function(resolve,reject){
-        User.update(rule,fields,options).exec(function(err,data){
+        User.update(rule,fields, {upsert: true}).exec(function(err,data){
             if(!err){
                 resolve(data);
             }else{
