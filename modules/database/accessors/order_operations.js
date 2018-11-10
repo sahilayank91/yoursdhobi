@@ -39,7 +39,8 @@ let getCreateTemplate = function (parameters) {
     template.created_at = new Date();
 
     if(template.pickup_date){
-        template.pickup_date = new Date(Number(template.pickup_date));
+        template.pickup_date = new Date(Number(template.pickup_date)).setHours(17,0,0,0);
+        console.log("pickup date:",template.pickup_date);
     }
 
     if (!template._id) {
@@ -124,7 +125,7 @@ let getOrderById = function(rule,fields,options){
             if(!err){
                 resolve(data);
             }else{
-                reject(new Error("Failed to get User"));
+                reject(new Error("Failed to get Order by Id"));
             }
         });
     });
@@ -154,7 +155,29 @@ let cancelOrder = function(rule,fields,options){
         });
     });
 };
-
+let addWasherman = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Order.findOneAndUpdate(rule,fields, {upsert: true}).exec(function(err,data){
+            if(!err){
+                console.log(data);
+                resolve(data);
+            }else{
+                reject(new Error("Failed to cancel Order"));
+            }
+        });
+    });
+};
+let getOrderByDate = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Order.find(rule,fields,options).exec(function(err,data){
+            if(!err){
+                resolve(data);
+            }else{
+                reject(new Error("Failed to get User"));
+            }
+        });
+    });
+};
 module.exports = {
     createOrder: createOrder,
     getOrder: getOrder,
@@ -162,5 +185,7 @@ module.exports = {
     getOrderById:getOrderById,
     getOrderFullDetail:getOrderFullDetail,
     getOrderByUserId:getOrderByUserId,
-    cancelOrder:cancelOrder
+    cancelOrder:cancelOrder,
+    getOrderByDate:getOrderByDate,
+    addWasherman:addWasherman
 };

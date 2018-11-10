@@ -14,10 +14,10 @@ router.post('/newOrder',function(req,res) {
         longitude:req.body.longitude,
         status:req.body.status,
         address:req.body.address,
-        washerman_id:'vUTzYdOCw',
         city:req.body.city
     };
 
+    console.log("parameters",parameters);
 
     OrderController.newOrder(parameters)
         .then(function (data) {
@@ -58,7 +58,7 @@ router.post('/getOrderByUserId',function(req,res) {
     OrderController.getOrderByUserId(parameters)
         .then(function (data) {
             if (data) {
-                console.log(data);
+                data = data.reverse();
                 RESPONSE.sendOkay(res, {success: true,data:data});
                 // RESPONSE.sendOkay(res, parameters);
                 return true;
@@ -73,10 +73,11 @@ router.post('/getOrderByUserId',function(req,res) {
 
 router.post('/getTodayOrders',function(req,res) {
     let parameters = {
-        userid:req.body.userid,
-        pickup_date:new Date()
+        washerman_id:req.body.washerman_id,
+        pickup_date:new Date().setHours(17,0,0,0)
     };
-    OrderController.getOrderByUserId(parameters)
+    console.log(parameters);
+    OrderController.getOrderByDate(parameters)
         .then(function (data) {
             if (data) {
                 console.log(data);
@@ -93,10 +94,10 @@ router.post('/getTodayOrders',function(req,res) {
 
 router.post('/getUpcomingOrders',function(req,res) {
     let parameters = {
-        userid:req.body.userid,
-        pickup_date: { $gte: new Date() }
+        washerman_id:req.body.washerman_id,
+        pickup_date: { $gte: new Date().setHours(22,0,0,) }
     };
-    OrderController.getOrderByUserId(parameters)
+    OrderController.getOrderByDate(parameters)
         .then(function (data) {
             if (data) {
                 console.log(data);
@@ -113,7 +114,7 @@ router.post('/getUpcomingOrders',function(req,res) {
 
 router.post('/getCompletedOrders',function(req,res) {
     let parameters = {
-        userid:req.body.userid,
+        washerman_id:req.body.washerman_id,
         status:'Completed'
     };
     OrderController.getOrderByUserId(parameters)

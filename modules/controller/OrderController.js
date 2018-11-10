@@ -1,40 +1,86 @@
 let orderOperations = require(__BASE__+"modules/database/accessors/order_operations");
 let userOperations = require(__BASE__+"modules/database/accessors/user_operations");
 const axios = require('axios');
-var distance = require('google-distance');
-distance.apiKey = 'AIzaSyCVxodOWzadw3PN1IOWexAfph64d-Y-pOg';
+let distance = require('google-distance-matrix');
 
-let distanceurl = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyBnCpVKXJg6GWvC2NZQ5zDxnd9oeE1QIEc";
-let apikey = 'AIzaSyCVxodOWzadw3PN1IOWexAfph64d-Y-pOg';
-let distance_url= "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
+distance.key('AIzaSyBq-PPSGvFPuqdq-7gNFGRQk9qS-xp5bAQ');
+distance.mode('driving');
+
 let newOrder = function(parameters){
     console.log(parameters);
     return orderOperations.createOrder(parameters)
         .then(function(data){
+            console.log("order created",data);
+            let washerman = {};
             if(data){
                 userOperations.getUsers({role:"Washerman",city:parameters.city})
                     .then(function(result){
-                        let param = {};
-                        distance_url = distanceurl + parameters.latitude + ',' + parameters.longitude;
-                        distance_url = '&destinations=';
+                        let origins = [];
+                        origins.push(parameters.latitude+','+parameters.longitude);
+                        let destinations =[];
+
                             if(result.length>0){
                                 for(let i=0;i<result.length;i++){
-                                    distance_url+=result[i].latitude + '%2C' + result[i].longitude;
+                                    destinations.push(result[i].latitude + ',' + result[i].longitude);
                                 }
-                                axios.get(distanceurl + 'origins='+result[i].latitude+','+result[i].longitude+'&'+'destinations=' + parameters.latitude+'%2C'+parameters.longitude + '&key=' + apikey)
-                                    .then(response => {
-                                        console.log(response);
-                                        // console.log(response.data.url);
-                                        // console.log(response.data.explanation);
-                                    })
-                                    .catch(error => {
-                                        console.log(error);
-                                    });
+                                distance.matrix(origins, destinations, function (err, distances) {
+                                    if (err) {
+                                        return console.log(err);
+                                    }
+                                    if(!distances) {
+                                        return console.log('no distances');
+                                    }
+                                    if (distances.status === 'OK') {
+                                        for (let i=0; i < origins.length; i++) {
+                                            for (let j = 0; j < destinations.length; j++) {
+                                                let origin = distances.origin_addresses[i];
+                                                let destination = distances.destination_addresses[j];
+                                                if (distances.rows[0].elements[j].status === 'OK') {
+                                                    console.log(distances.rows[i].elements[j]);
 
+                                                    let distance = distances.rows[i].elements[j].distance.text;
+                                                    let value = distances.rows[i].elements[j].distance.value;
+                                                    if(washerman.value===undefined){
+                                                        washerman.id = result[j]._id;
+                                                        washerman.value = value;
+                                                        washerman.text = distance;
+                                                    }else{
+                                                        if(washerman.value > value){
+                                                            washerman.id = result[j]._id;
+                                                            washerman.value = value;
+                                                            washerman.text = distance;
+                                                        }
+                                                    }
+
+
+                                                    console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
+                                                } else {
+                                                    console.log(destination + ' is not reachable by land from ' + origin);
+                                                }
+                                            }
+                                        }
+
+                                        orderOperations.addWasherman({_id:data._id},{$set:{washerman_id:washerman.id}})
+                                            .then(function(data){
+                                                if(data){
+                                                    // console.log(data);
+                                                    return data;
+                                                }
+
+                                            }).catch(function(err){
+                                            console.log(err);
+                                        });
+                                    }
+                                });
                             }
-                            console.log("total washername",result);
-                        console.log(result);
-                    }).catch(function(err){
+                    }).then(function(res){
+
+
+
+
+
+
+                }).catch(function(err){
                         console.log(err);
                 });
 
@@ -101,9 +147,9 @@ let getOrderByUserId = function(parameters){
             console.log("Error in createUser",error);
         })
 };
-let getTodayOrder = function(parameters){
+let getOrderByDate = function(parameters){
 
-    return orderOperations.getTodayOrder(parameters)
+    return orderOperations.getOrderByDate(parameters)
         .then(function(data){
             if(data){
                 return data;
@@ -134,7 +180,7 @@ module.exports = {
     updateOrder:updateOrder,
     getOrderById:getOrderById,
     getOrderByUserId:getOrderByUserId,
-    getTodayOrder:getTodayOrder,
+    getOrderByDate:getOrderByDate,
     cancelOrder:cancelOrder
 
 };
