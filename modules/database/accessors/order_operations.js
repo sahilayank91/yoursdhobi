@@ -1,7 +1,6 @@
 let Order = require(__BASE__ + 'modules/database/models/order');
 let customUUID = require(__BASE__ + "modules/utils/CustomUUID");
 let Promise = require('bluebird');
-let moment = require('moment');
 
 //A template to input the data required at the registration of the user
 let getCreateTemplate = function (parameters) {
@@ -30,6 +29,7 @@ let getCreateTemplate = function (parameters) {
             case 'longitude':
             case 'washerman_id':
             case 'userid':
+            case 'total':
                 template[key] = parameters[key];
                 break;
         }
@@ -40,7 +40,6 @@ let getCreateTemplate = function (parameters) {
 
     if(template.pickup_date){
         template.pickup_date = new Date(Number(template.pickup_date)).setHours(17,0,0,0);
-        console.log("pickup date:",template.pickup_date);
     }
 
     if (!template._id) {
@@ -135,7 +134,13 @@ let getOrderById = function(rule,fields,options){
 
 let getOrderByUserId = function(rule,fields,options){
     return new Promise(function(resolve,reject){
-        Order.find(rule,fields,options).exec(function(err,data){
+        Order.find(rule,fields,options)
+            .populate([
+            {
+                path: "userid",
+                select: '_id firstname lastname address flataddress city phone pincode latitude longitude'
+            }
+        ]).exec(function(err,data){
             if(!err){
                 resolve(data);
             }else{
@@ -169,7 +174,14 @@ let addWasherman = function(rule,fields,options){
 };
 let getOrderByDate = function(rule,fields,options){
     return new Promise(function(resolve,reject){
-        Order.find(rule,fields,options).exec(function(err,data){
+        Order.find(rule,fields,options)
+            .populate([
+                {
+                    path: "userid",
+                    select: '_id firstname lastname address flataddress city phone pincode latitude longitude'
+                }
+            ])
+            .exec(function(err,data){
             if(!err){
                 resolve(data);
             }else{

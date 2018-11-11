@@ -20,28 +20,19 @@ let getCreateTemplate = function (parameters) {
 					case 'phone':
 					case 'password':
 					case 'profilePic':
-					case 'secondary_email':
 					case 'secondary_phone':
 					case 'keys':
 					case 'gender':
 					case 'dob':
 					case 'fathername':
-					case 'interest':
 					case 'mothername':
-					case 'father_mobileno':
-					case 'mother_mobileno':
-					case 'parent_email':
-					case 'permanent_address':
-					case 'local_address':
-                    case 'expertise':
-                    case 'occupation':
                     case 'latitude':
                     case 'longitude':
                     case 'city':
                     case 'pincode':
                     case 'address':
                     case 'role':
-
+                    case 'flataddress':
                 template[key] = parameters[key];
                 break;
         }

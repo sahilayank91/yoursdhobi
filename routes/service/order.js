@@ -14,7 +14,8 @@ router.post('/newOrder',function(req,res) {
         longitude:req.body.longitude,
         status:req.body.status,
         address:req.body.address,
-        city:req.body.city
+        city:req.body.city,
+        total:req.body.total
     };
 
     console.log("parameters",parameters);

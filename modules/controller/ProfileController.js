@@ -14,8 +14,8 @@ var getProfile = function(id){
 		});
 };
 
-var updateProfile = function(parameters){
-	return profileOperations.updateProfile({_id:parameters._id},parameters)
+var updateProfile = function(parameters,template){
+	return profileOperations.updateProfile(parameters,template)
 		.then(function(data){
 			if(data){
 				return data;

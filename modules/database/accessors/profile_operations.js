@@ -1,7 +1,7 @@
-var User = require(__BASE__ + 'modules/database/models/user');
-var Promise = require('bluebird');
+let User = require(__BASE__ + 'modules/database/models/user');
+let Promise = require('bluebird');
 
-var getProfile = function(rule,fields,options){
+let getProfile = function(rule,fields,options){
 	return new Promise(function(resolve,reject){
 		User.find({_id:rule},fields,options).exec(function(err,data){
 			if(!err){
@@ -13,7 +13,7 @@ var getProfile = function(rule,fields,options){
 	});
 };
 
-var updateProfile = function(rule,fields){
+let updateProfile = function(rule,fields){
 	return new Promise(function(resolve,reject){
 		User.findOneAndUpdate(rule,fields, {upsert: true}).exec(function(err,data){
 			if(!err){

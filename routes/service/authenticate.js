@@ -1,15 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var userOperations = require(__BASE__+"modules/database/accessors/user_operations");
-var profileOperations = require(__BASE__+"modules/database/accessors/profile_operations");
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var RESPONSE = require(__BASE__ + "modules/controller/handler/ResponseHandler");
-var DataValidator = require(__BASE__ + "modules/utils/DataValidator");
-var client = require(__BASE__ + "modules/controller/handler/TokenHandler").REDIS_CLIENT;
-var UserController = require(__BASE__ + "modules/controller/UserController");
-var ProfileController = require(__BASE__ + "modules/controller/ProfileController");
-var TokenHandler = require(__BASE__ + "modules/controller/handler/TokenHandler");
+let express = require('express');
+let router = express.Router();
+let userOperations = require(__BASE__+"modules/database/accessors/user_operations");
+let profileOperations = require(__BASE__+"modules/database/accessors/profile_operations");
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let RESPONSE = require(__BASE__ + "modules/controller/handler/ResponseHandler");
+let DataValidator = require(__BASE__ + "modules/utils/DataValidator");
+let client = require(__BASE__ + "modules/controller/handler/TokenHandler").REDIS_CLIENT;
+let UserController = require(__BASE__ + "modules/controller/UserController");
+let ProfileController = require(__BASE__ + "modules/controller/ProfileController");
+let TokenHandler = require(__BASE__ + "modules/controller/handler/TokenHandler");
 const nodemailer = require('nodemailer');
 let customUUID = require(__BASE__ + "modules/utils/CustomUUID");
 let notificationOperations = require(__BASE__+"modules/database/accessors/notification_operations");
@@ -18,15 +18,15 @@ let notificationOperations = require(__BASE__+"modules/database/accessors/notifi
 /* GET users listing. */
 router.post('/login', function(req, res) {
 
-    var userPass = req.body.password;
-    var userEmail = req.body.email;
+    let userPass = req.body.password;
+    let userEmail = req.body.email;
     if ((!DataValidator.isValidEmail(userEmail))  && !DataValidator.isValidPassword(userPass)){
 
         console.log("User input is not correct");
         RESPONSE.sendError(res,{success:false});
 
     }else {
-        var parameters = {
+        let parameters = {
             userpass: userPass  ,
             useremail: userEmail
         };
@@ -52,9 +52,35 @@ router.post('/login', function(req, res) {
 
 
 });
+router.post('/getUserById', function(req, res) {
+
+    let id = req.body._id;
+
+        let parameters = {
+            _id: id,
+        };
+
+        UserController.getUserFullDetail(parameters)
+            .then(function (data) {
+                if (data.length >0) {
+
+                    /*Setting up session parameters*/
+                    // req.session.key = TokenHandler.generateAuthToken(data[0]._id,data[0].role);
+                    // req.session.email=data[0].email;
+                    // req.session.role = data[0].role;
+
+                    console.log(data[0]);
+                    RESPONSE.sendOkay(res, data[0]);
+                } else {
+                    console.log("Some error occured while getting data from the database");
+                }
+            }).catch(function (err) {
+            console.log(err);
+        });
+});
 
 router.post('/register',function(req,res) {
-    var parameters = {
+    let parameters = {
         email: req.body.email,
         password: req.body.password,
         firstname: req.body.firstname,
@@ -79,6 +105,9 @@ router.post('/register',function(req,res) {
     if(req.body.pincode){
         parameters.pincode = req.body.pincode;
     }
+    if(req.body.userflataddress){
+        parameters.flataddress  = req.body.userflataddress;
+    }
     UserController.registerUser(parameters)
         .then(function (data) {
             if (data) {
@@ -96,7 +125,7 @@ router.post('/register',function(req,res) {
 
 
 router.post('/getProfile',function(req,res,next){
-    var id = req.body._id;
+    let id = req.body._id;
 
     profileOperations.getProfile(id)
         .then(function(data){
@@ -110,7 +139,7 @@ router.post('/getProfile',function(req,res,next){
 });
 
 router.post('/getNotification',function(req,res,next){
-    var id = req.body._id;
+    let id = req.body._id;
     console.log("id:",id);
     notificationOperations.getNotification({user:id})
         .then(function(data){
@@ -126,27 +155,25 @@ router.post('/getNotification',function(req,res,next){
 
 
 
-router.post('/updateProfile', function (req, res, next) {
-    var parameters = {
-        _id:req.body._id,
-        email: req.body.email,
-        firstname: req.body.firstname,
-        middlename: req.body.middlename,
-        lastname: req.body.lastname,
-        phone: req.body.phone,
-        profilePic:req.body.profilePic,
-        occupation:req.body.occupation,
-        permanent_address: req.body.permanent_address,
-        expertise:req.body.expertise,
-        activated:req.body.activated
+router.post('/updateUser', function (req, res, next) {
+    let parameter = {
+        _id:req.body._id
     };
-    if(req.body.interest){
-        parameters.interest=req.body.interest;
-    }
-    ProfileController.updateProfile(parameters)
+    let template = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        flataddress:req.body.flataddress,
+        city:req.body.city,
+        address:req.body.address,
+        latitude:req.body.latitude,
+        longitude:req.body.longitude
+    };
+
+    ProfileController.updateProfile(parameter,template)
         .then(function (Data) {
             if (Data) {
-                RESPONSE.sendOkay(res, {success: true});
+                console.log(Data);
+                RESPONSE.sendOkay(res, Data);
             } else {
                 console.log("Some error occured while updating data in the database");
             }
@@ -158,7 +185,7 @@ router.post('/updateProfile', function (req, res, next) {
 });
 
 router.post('/activateAccount', function (req, res, next) {
-    var parameters = {
+    let parameters = {
         _id:req.body._id,
         activated:req.body.activated
     };
@@ -267,7 +294,7 @@ router.get('/getLoggedInUser',function(req,res){
     if (!req.session.key) {
         return;
     }
-    var parameters = {
+    let parameters = {
         useremail: req.session.email
     };
     UserController.getLoggedInUser(parameters)

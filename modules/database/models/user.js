@@ -22,10 +22,10 @@ var UserSchema = new mongoose.Schema({
     password: {type: String, required: false},
 	gender: {
 		type:String,
-
 		enum:[GENDER.MALE,GENDER.FEMALE,GENDER.OTHER]
 	},
     address:{type:String},
+    flataddress:{type:String},
     city:{type:String},
     pincode:{type:String},
     profilePic: {type:String},

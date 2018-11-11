@@ -28,7 +28,8 @@ module.exports = {
         WASH_AND_IRON:'Wash and Iron',
         DRYCLEAN:'Dry Clean',
         PREMIUM_LAUNDRY:'Premium Laundry',
-        STEAM_IRON:'Steam Ironing'
+        STEAM_IRON:'Steam Ironing',
+        DONATION:'Donation'
     },
     post_type:{
         TECHNOLOGY:'Technology',
