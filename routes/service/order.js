@@ -18,7 +18,6 @@ router.post('/newOrder',function(req,res) {
         total:req.body.total
     };
 
-    console.log("parameters",parameters);
 
     OrderController.newOrder(parameters)
         .then(function (data) {

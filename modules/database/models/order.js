@@ -28,6 +28,7 @@ var OrderSchema = new mongoose.Schema({
     longitude: {type: Number},
     order:{type:String},
     city:{type:String},
+    total:{type:String},
     service:{type:String,enum:[SERVICE.DRYCLEAN,SERVICE.PREMIUM_LAUNDRY,SERVICE.STEAM_IRON,SERVICE.WASH_AND_FOLD,SERVICE.WASH_AND_IRON,SERVICE.DONATION]},
     status:{type:String,enum:[STATUS.RECIEVED,ENUMS.COMPLETED,ENUMS.DELIVERED,ENUMS.CANCELLED],required:true},
     minimize: false,
