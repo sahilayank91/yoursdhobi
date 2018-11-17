@@ -89,6 +89,9 @@ router.post('/register',function(req,res) {
         phone:req.body.phone,
         role:req.body.role,
     };
+    if(req.body.gender){
+        parameters.gender = req.body.gender;
+    }
     if(req.body.secondary_phoneno){
         parameters.secondary_phoneno = req.body.secondary_phoneno;
     }

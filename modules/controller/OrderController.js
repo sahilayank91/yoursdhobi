@@ -109,6 +109,21 @@ let getOrder = function(parameters){
         })
 };
 
+
+let verifyOTP = function(parameters){
+    return orderOperations.getOrder(parameters)
+        .then(function(data){
+            if(data){
+                return data;
+            }else{
+                throw new Error('Cant create user with the given credentials');
+            }
+        }).catch(function(error){
+            console.log("Error in createUser",error);
+        })
+};
+
+
 let updateOrder = function(parameters){
     return orderOperations.updateOrder(parameters)
         .then(function(data){
@@ -181,6 +196,7 @@ module.exports = {
     getOrderById:getOrderById,
     getOrderByUserId:getOrderByUserId,
     getOrderByDate:getOrderByDate,
-    cancelOrder:cancelOrder
+    cancelOrder:cancelOrder,
+    verifyOTP:verifyOTP
 
 };

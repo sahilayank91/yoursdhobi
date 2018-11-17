@@ -41,9 +41,6 @@ let getCreateTemplate = function (parameters) {
 
     template.created_at = new Date();
 
-    // if (parameters.password) {
-    //     template.password = cryptographer.hashIt(parameters.password);
-    // }
 
     if (!template._id) {
         template._id = customUUID.getRandomAplhaNumeric();

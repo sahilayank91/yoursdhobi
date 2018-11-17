@@ -148,6 +148,34 @@ router.post('/updateOrder',function(req,res) {
 
         });
 });
+
+
+
+router.post('/verifyOTP',function (req,res) {
+   let parameters = {
+       _id:req.body._id
+   };
+
+   if(req.body.pickup_otp){
+       parameters.pickup_otp = req.body.pickup_otp;
+   }
+
+   if(req.body.delivered_otp){
+       parameters.delivered_otp = req.body.delivered_otp;
+   }
+
+
+   OrderController.verifyOTP(parameters)
+       .then(function(data){
+           console.log(data);
+           if(data.length>0){
+               RESPONSE.sendOkay(res,{success:true});
+           }else{
+               RESPONSE.sendOkay(res,{success:false});
+           }
+       })
+
+});
 router.post('/cancelOrder',function(req,res) {
     let parameters = {
         _id:req.body._id,
