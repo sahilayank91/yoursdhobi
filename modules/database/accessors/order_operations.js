@@ -1,4 +1,6 @@
 let Order = require(__BASE__ + 'modules/database/models/order');
+let Offer_User = require(__BASE__ + 'modules/database/models/relations/offer_user');
+let Offer = require(__BASE__ + 'modules/database/models/offer');
 let customUUID = require(__BASE__ + "modules/utils/CustomUUID");
 let Promise = require('bluebird');
 
@@ -32,6 +34,11 @@ let getCreateTemplate = function (parameters) {
             case 'total':
             case 'pickup_otp':
             case 'delivered_otp':
+            case 'type':
+            case 'email':
+            case 'offer':
+            case 'code':
+            case 'offerid':
                 template[key] = parameters[key];
                 break;
         }
@@ -53,14 +60,77 @@ let getCreateTemplate = function (parameters) {
     return template;
 };
 
+let getOfferCreateTemplate = function (parameters) {
+
+    let template = {}
+    for (let key in parameters) {
+        switch (key) {
+            case '_id':
+            case 'percentage':
+            case 'offer':
+            case 'url':
+            case 'code':
+            case 'service':
+                template[key] = parameters[key];
+                break;
+        }
+    }
 
 
+    template.created_at = new Date();
+
+    if (!template._id) {
+        template._id = customUUID.getRandomString(6);
+    }
+
+    return template;
+};
+
+let getOfferUserRelationCreateTemplate = function (parameters) {
+
+    let template = {}
+    for (let key in parameters) {
+        switch (key) {
+            case '_id':
+            case 'offerid':
+            case 'user':
+                template[key] = parameters[key];
+                break;
+        }
+    }
+
+
+    template.created_at = new Date();
+
+    if (!template._id) {
+        template._id = customUUID.getRandomString(6);
+    }
+
+    return template;
+};
 let createOrder = function (parameters) {
     return new Promise(function(resolve, reject) {
         let template = getCreateTemplate(parameters);
         /*Store the user using the template*/
         let order = new Order(template);
         order.save(function(err, data) {
+            if (!err) {
+                resolve(data);
+            } else {
+                console.log(err);
+                reject(new Error('createOffer failed'));
+            }
+        });
+    });
+};
+
+
+let createOffer = function(parameters){
+    return new Promise(function(resolve, reject) {
+        let template = getOfferCreateTemplate(parameters);
+        /*Store the user using the template*/
+        let offer = new Offer(template);
+        offer.save(function(err, data) {
             if (!err) {
                 resolve(data);
             } else {
@@ -72,6 +142,21 @@ let createOrder = function (parameters) {
 };
 
 
+let createUserOfferRelation = function(parameters){
+    return new Promise(function(resolve, reject) {
+        let template = getOfferUserRelationCreateTemplate(parameters);
+        /*Store the user using the template*/
+        let offer = new Offer_User(template);
+        offer.save(function(err, data) {
+            if (!err) {
+                resolve(data);
+            } else {
+                console.log(err);
+                reject(new Error('createOrder failed'));
+            }
+        });
+    });
+};
 let getOrder = function (rule, fields, options) {
     return new Promise(function (resolve, reject) {
         Order.find(rule, fields, options).exec(function (err, data) {
@@ -189,11 +274,39 @@ let getOrderByDate = function(rule,fields,options){
             if(!err){
                 resolve(data);
             }else{
-                reject(new Error("Failed to get User"));
+                reject(new Error("Failed to get order"));
             }
         });
     });
 };
+
+
+
+let checkIfUserHasUsedCoupon = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Offer_User.find(rule,fields,options).exec(function(err,data){
+            if(!err){
+                resolve(data);
+            }else{
+                reject(new Error("Failed to get relation"));
+            }
+        });
+    });
+};
+
+let getOffer = function(rule,fields,options){
+    return new Promise(function(resolve,reject){
+        Offer.find(rule,fields,options).exec(function(err,data){
+            if(!err){
+                resolve(data);
+            }else{
+                reject(new Error("Failed to get Offer"));
+            }
+        });
+    });
+};
+
+
 module.exports = {
     createOrder: createOrder,
     getOrder: getOrder,
@@ -203,5 +316,9 @@ module.exports = {
     getOrderByUserId:getOrderByUserId,
     cancelOrder:cancelOrder,
     getOrderByDate:getOrderByDate,
-    addWasherman:addWasherman
+    addWasherman:addWasherman,
+    checkIfUserHasUsedCoupon:checkIfUserHasUsedCoupon,
+    createOffer:createOffer,
+    getOffer:getOffer,
+    createUserOfferRelation:createUserOfferRelation
 };

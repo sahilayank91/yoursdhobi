@@ -7,13 +7,18 @@ var GENDER = ENUMS.gender;
 var YEAR = ENUMS.year;
 var STATUS = ENUMS.status;
 var SERVICE = ENUMS.service_type;
+var TYPE = ENUMS.type;
+
 var OrderSchema = new mongoose.Schema({
     _id: String,
+    email:{type:String},
     upper: {type: String},
     bottom: {type: String},
     woollen: {
         type: String
     },
+    offer:{type:String},
+    code:{type:String},
     jacket: {type: String},
     blanket_single: {type: String},
     blanket_double: {type: String},
@@ -30,9 +35,10 @@ var OrderSchema = new mongoose.Schema({
     city:{type:String},
     total:{type:String},
     pickup_otp:{type:String},
+    type:{type:String,enum:[TYPE.NORMAL,TYPE.EXPRESS]},
     delivered_otp:{type:String},
-    service:{type:String,enum:[SERVICE.DRYCLEAN,SERVICE.PREMIUM_LAUNDRY,SERVICE.STEAM_IRON,SERVICE.WASH_AND_FOLD,SERVICE.WASH_AND_IRON,SERVICE.DONATION]},
-    status:{type:String,enum:[STATUS.RECIEVED,ENUMS.COMPLETED,ENUMS.DELIVERED,ENUMS.CANCELLED],required:true},
+    service:{type:String,enum:[SERVICE.DRYCLEAN,SERVICE.PREMIUM_LAUNDRY,SERVICE.IRONING,SERVICE.WASH_AND_FOLD,SERVICE.WASH_AND_IRON,SERVICE.DONATION]},
+    status:{type:String,enum:[STATUS.RECIEVED,STATUS.COMPLETED,STATUS.DELIVERED,STATUS.CANCELLED,STATUS.PICKED],required:true},
     minimize: false,
 
 });

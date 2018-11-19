@@ -16,6 +16,8 @@ router.post('/getFeedback', function(req, res) {
             .then(function (data) {
                 console.log(data);
                 if (data) {
+
+                    data = data.reverse();
                     RESPONSE.sendOkay(res, data);
                 } else {
                     console.log("Some error occured while getting data from the database");

@@ -12,7 +12,12 @@ module.exports = {
       RECIEVED:'Recieved',
       COMPLETED:'Completed',
       DELIVERED:'Delivered',
-      CANCELLED:'Cancelled'
+      CANCELLED:'Cancelled',
+        PICKED:'Picked'
+    },
+    type:{
+      NORMAL:'Normal',
+      EXPRESS:'Express'
     },
     gender:{
         MALE:'Male',
@@ -26,9 +31,9 @@ module.exports = {
     service_type:{
         WASH_AND_FOLD:'Wash and Fold',
         WASH_AND_IRON:'Wash and Iron',
-        DRYCLEAN:'Dry Clean',
+        DRYCLEAN:'Dryclean',
         PREMIUM_LAUNDRY:'Premium Laundry',
-        STEAM_IRON:'Steam Ironing',
+        IRONING:'Ironing',
         DONATION:'Donation'
     },
     post_type:{
