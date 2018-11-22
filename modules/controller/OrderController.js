@@ -60,6 +60,10 @@ let newOrder = function(parameters){
                                             }
                                         }
 
+                                        if(washerman.value >12000){
+                                            return false;
+                                        }
+
                                         orderOperations.addWasherman({_id:data._id},{$set:{washerman_id:washerman.id}})
                                             .then(function(data){
                                                 if(data){
@@ -110,6 +114,7 @@ let refuseOrder = function (parameters) {
 
                         if(result.length>0){
                             for(let i=0;i<result.length;i++){
+                                // if(result[i]._id != )
                                 destinations.push(result[i].latitude + ',' + result[i].longitude);
                             }
                             distance.matrix(origins, destinations, function (err, distances) {
@@ -134,7 +139,7 @@ let refuseOrder = function (parameters) {
                                                     washerman.value = value;
                                                     washerman.text = distance;
                                                 }else{
-                                                    if(washerman.value > value){
+                                                    if(washerman.value > value ){
                                                         washerman.id = result[j]._id;
                                                         washerman.value = value;
                                                         washerman.text = distance;
@@ -149,7 +154,7 @@ let refuseOrder = function (parameters) {
                                         }
                                     }
 
-                                    orderOperations.addWasherman({_id:data._id},{$set:{washerman_id:washerman.id}})
+                                    orderOperations.addWasherman({_id:parameters._id},{$set:{washerman_id:washerman.id}})
                                         .then(function(data){
                                             if(data){
                                                 // console.log(data);
@@ -174,7 +179,7 @@ let refuseOrder = function (parameters) {
         }).catch(function(error){
             console.log("Error in createOrder",error);
         })
-}
+};
 let getOrder = function(parameters){
     return orderOperations.getOrder(parameters)
         .then(function(data){
@@ -305,6 +310,19 @@ let createOffer = function(parameters){
         })
 };
 
+let createDonation = function(parameters){
+    return orderOperations.createDonation(parameters)
+        .then(function(data){
+            if(data){
+                return data;
+            }else{
+                throw new Error('Cant create user with the given credentials');
+            }
+        }).catch(function(error){
+            console.log("Error in createUser",error);
+        })
+};
+
 let getOffer = function(parameters){
     return orderOperations.getOffer(parameters)
         .then(function(data){
@@ -330,6 +348,20 @@ let createUserOfferRelation = function(parameters){
         })
 };
 
+
+let getImages = function(parameters){
+    return orderOperations.getImages(parameters)
+        .then(function(data){
+            if(data){
+                return data;
+            }else{
+                throw new Error('Cant get offer with the given credentials');
+            }
+        }).catch(function(error){
+            console.log("Error in createUser",error);
+        })
+};
+
 module.exports = {
    newOrder:newOrder,
     getOrder:getOrder,
@@ -343,6 +375,8 @@ module.exports = {
     checkIfUserHasUsedCoupon:checkIfUserHasUsedCoupon,
     createOffer:createOffer,
     getOffer:getOffer,
+    createDonation:createDonation,
+    getImages:getImages,
     createUserOfferRelation:createUserOfferRelation
 
 };

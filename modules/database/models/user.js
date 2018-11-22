@@ -35,7 +35,9 @@ var UserSchema = new mongoose.Schema({
     occupation:{type:String},
     latitude:{type:String},
     longitude:{type:String},
-
+    day:{type:String},
+    month:{type:String},
+    year:{type:String},
     about: String,
     }, {
     minimize: false

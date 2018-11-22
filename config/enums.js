@@ -24,6 +24,10 @@ module.exports = {
         FEMALE:'Female',
         OTHER:'Other'
     },
+    image_type:{
+      OFFER:'Offer',
+      DONATION:'Donation'
+    },
     image_resolution_types:{
         IMAGE_MEDIUM: 'medium',
         IMAGE_HIGH: 'high'

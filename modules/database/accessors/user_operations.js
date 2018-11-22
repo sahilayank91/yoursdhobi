@@ -32,7 +32,10 @@ let getCreateTemplate = function (parameters) {
                     case 'pincode':
                     case 'address':
                     case 'role':
-                    case 'flataddress':
+            case 'flataddress':
+            case 'day':
+            case 'month':
+            case 'year':
                 template[key] = parameters[key];
                 break;
         }

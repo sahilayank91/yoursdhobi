@@ -88,6 +88,9 @@ router.post('/register',function(req,res) {
         address:req.body.address,
         phone:req.body.phone,
         role:req.body.role,
+        day:req.body.day,
+        month:req.body.month,
+        year:req.body.year
     };
     if(req.body.gender){
         parameters.gender = req.body.gender;

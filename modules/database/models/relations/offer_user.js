@@ -6,7 +6,7 @@ var OfferUserSchema = new mongoose.Schema(
     {
         _id:{type:String},
         user: {type:String,ref:'User'},
-        offerid:{type:String, ref:'Offer'},
+        offerid:{type:String, ref:'Image'},
         coupon:{type:String},
         created_at:{type:Date,default:new Date()}
     },
