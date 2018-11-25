@@ -112,6 +112,7 @@ router.post('/getUpcomingOrders',function(req,res) {
     let parameters = {
         washerman_id:req.body.washerman_id,
         pickup_date: { $gte: new Date().setHours(22,0,0,) },
+        status:'Recieved'
     };
     OrderController.getOrderByDate(parameters)
         .then(function (data) {
@@ -132,6 +133,24 @@ router.post('/getCompletedOrders',function(req,res) {
     let parameters = {
         washerman_id:req.body.washerman_id,
         status:'Delivered'
+    };
+    OrderController.getOrderByUserId(parameters)
+        .then(function (data) {
+            if (data) {
+                console.log(data);
+                RESPONSE.sendOkay(res, {success: true,data:data});
+                return true;
+            } else {
+                console.log("Some error occured while getting order from the database");
+                return false;
+            }
+        });
+});
+
+router.post('/getPickedOrders',function(req,res) {
+    let parameters = {
+        washerman_id:req.body.washerman_id,
+        status:'Picked'
     };
     OrderController.getOrderByUserId(parameters)
         .then(function (data) {
