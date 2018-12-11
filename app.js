@@ -12,8 +12,6 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
-
-
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config()
 }
