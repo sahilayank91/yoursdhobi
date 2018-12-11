@@ -11,8 +11,8 @@ let getCreateTemplate = function (parameters) {
     let template = {}
     for (let key in parameters) {
         switch (key) {
-        	case '_id':
-          case 'name':
+        	        case '_id':
+                    case 'name':
 					case 'firstname':
 					case 'middlename':
 					case 'lastname':

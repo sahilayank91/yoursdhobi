@@ -51,7 +51,9 @@ let getCreateTemplate = function (parameters) {
     template.created_at = new Date();
 
     template.pickup_otp  = customUUID.getOTP();
+
     template.delivered_otp = customUUID.getOTP();
+
     if(template.pickup_date){
         template.pickup_date = new Date(Number(template.pickup_date)).setHours(17,0,0,0);
     }
